@@ -1,0 +1,241 @@
+cd path/to/your/folder
+git init
+git remote add origin https://github.com/divijareddy15/abc.git
+git branch -M main
+git add test.txt
+git commit -m "add test.txt"
+git push -u origin main
+
+//nagios
+docker rm -f nagiosdemo1
+docker run --name nagiosdemo1 -p 8881:80 jasonrivers/nagios
+
+//ngrok
+35kk3XBOhO4vbeJFPve4TqSXrHI_82JkW1ZqfPWPJ1Vi2oMM6
+
+
+# 2 pipeline
+ New Item → Freestyle Project
+
+Keep:
+
+SCM
+
+Git URL: https://github.com/bhavagna06/Maven.git
+
+Branch: */main (or) */master
+
+# Build Steps
+
+1️⃣ Invoke top-level Maven targets
+
+Maven version: MAVEN_HOME
+
+Goals: clean
+
+2️⃣ Invoke top-level Maven targets
+
+Maven version: MAVEN_HOME
+
+Goals: install
+
+# Post-Build Actions
+
+Archive artifacts: **/*
+
+Build other projects: MavenJava_Test
+
+Trigger: Only if build is stable
+
+Save.
+
+✅ Step 3 — Create Test Job (MavenJava_Test)
+# Build Environment
+
+✔ Delete workspace before build
+
+# Copy Artifacts
+
+Project name: MavenJava_Build
+
+Build: Stable only
+
+Artifacts: **/*
+
+Build Step
+
+Invoke top-level Maven targets
+
+Maven version: MAVEN_HOME
+
+Goals: test
+
+Post-Build Actions
+
+Archive artifacts: **/*
+
+Save.
+
+
+
+# 3 pipeline
+
+
+🌐 Maven Web Automation — Short & Clear Steps
+✅ Step 1 — Build Job (MavenWeb_Build)
+
+New Item → Freestyle Project
+
+Name: MavenWeb_Build
+
+SCM
+
+Git URL: https://github.com/bhavagna06/maven-web-app.git
+
+Branch: */main or */master
+
+Build Steps
+
+1️⃣ Invoke top-level Maven targets
+
+Maven version: MAVEN_HOME
+
+Goals: clean
+
+2️⃣ Invoke top-level Maven targets
+
+Maven version: MAVEN_HOME
+
+Goals: install
+
+Post-Build Actions
+
+Archive artifacts: **/*
+
+Build other projects: MavenWeb_Test
+
+Trigger: Only if build is stable
+
+Save.
+
+✅ Step 2 — Test Job (MavenWeb_Test)
+Build Environment
+
+✔ Delete workspace before build starts
+
+Copy Artifacts
+
+Project name: MavenWeb_Build
+
+Build: Stable only
+
+Artifacts: **/*
+
+Build Step
+
+Invoke top-level Maven targets
+
+Maven version: MAVEN_HOME
+
+Goals: test
+
+Post-Build Actions
+
+Archive artifacts: **/*
+
+Build other projects: MavenWeb_Deploy
+
+Save.
+
+✅ Step 3 — Deploy Job (MavenWeb_Deploy)
+Build Environment
+
+✔ Delete workspace before build starts
+
+Copy Artifacts
+
+Project name: MavenWeb_Test
+
+Build: Stable only
+
+Artifacts: **/*
+
+Post-Build Actions
+
+Deploy WAR/EAR to a container
+
+WAR/EAR File: **/*.war
+
+Context path: Webpath
+
+Container: Tomcat 9.x remote
+
+Credentials: admin / 1234
+
+Tomcat URL: http://localhost:8080/
+
+Save.
+
+🎯 Pipeline View
+
+Create → MavenWeb_Pipeline
+
+Initial Job: MavenWeb_Build
+
+
+
+# nagios
+
+1.docker pull jasonrivers/nagios:latest
+2.docker run --name nagiosdemo1 -p 8888:80 jasonrivers/nagios:latest
+ pipeline {
+    agent any
+    tools {
+        maven 'Maven-3.9.11'
+    }
+    stages {
+        stage('Clone Git Repo & Clean') {
+            steps {
+                bat 'if exist mavenjava rmdir /s /q mavenjava'
+                bat 'git clone https://github.com/srivyshnavi18/maven-java-project.git mavenjava'
+                bat 'mvn clean -f mavenjava/pom.xml'
+            }
+        }
+        stage('Install') {
+            steps {
+                bat 'mvn install -f mavenjava/pom.xml'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'mvn test -f mavenjava/pom.xml'
+            }
+        }
+        stage('Package') {
+            steps {
+                bat 'mvn package -f mavenjava/pom.xml'
+            }
+        }
+    }
+}
+
+
+
+# ngrk 
+1.ngrok config add-authtoken <your_token>
+2.ngrok http 8080
+3.Open your GitHub Repo → Settings → Webhooks
+Click Add Webhook
+Set:
+Payload URL
+https://abcd1234.ngrok.io/github-webhook/
+Content type
+application/json
+4.Click Add webhook
+5.✅ Step 4 — Configure Jenkins
+Open Jenkins → Your Job → Configure
+Enable:
+✔ GitHub hook trigger for GITScm polling
+Save.
+🎉 RESULT:
+Every push to GitHub → triggers Jenkins automatically through ngrok.
